@@ -17,8 +17,8 @@ def plot_silhoutte_scores(sil_scores):
   ax.set_xlabel("number of clusters")
   ax.set_ylabel("silhouette score")
 
-def rgb_histogram(image_path):
-  img = cv2.imread(image_path)
+def plot_rgb(image):
+  img = cv2.imread(image)
   color = ('b', 'g', 'r')
   for i, col in enumerate(color):
       histr = cv2.calcHist([img], [i], None, [256], [0, 256])
