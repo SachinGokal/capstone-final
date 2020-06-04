@@ -33,20 +33,20 @@ def full_df(info=info_df(), average_scores=average_scores_df()):
   full_df = full_df.reset_index().rename(columns={'index': 'video_id'})
   return full_df
 
-def create_frames():
+def create_frames(data_set='train'):
   for video in glob.glob('data/video/*.mp4'):
     video_id = video.split('data/video/')[1].split('.mp4')[0]
     video_capture = cv2.VideoCapture(video)
     currentframe = 0
     try:
-        if not os.path.exists(f'data/frames/{video_id}'):
-            os.makedirs(f'data/frames/{video_id}')
+        if not os.path.exists(f'data/frames/{data_set}/{video_id}'):
+            os.makedirs(f'data/frames/{data_set}/{video_id}')
     except OSError:
         print('Error: Creating directory of data')
     while(True):
         ret, frame = video_capture.read()
         if ret:
-            name = f'data/frames/{video_id}/' + str(currentframe) + '.jpg'
+            name = f'data/frames/{data_set}/{video_id}/' + str(currentframe) + '.jpg'
             print('Creating...' + name)
             cv2.imwrite(name, frame)
             currentframe += 1
@@ -55,8 +55,8 @@ def create_frames():
     video1_capture.release()
     cv2.destroyAllWindows()
 
-def sort_frames(list_of_frames, video_id):
-    return sorted(list_of_frames, key=lambda x: int(x.split(f'data/frames/{video_id}/')[1].split('.jpg')[0]))
+def sort_frames(list_of_frames, video_id, data_set='train'):
+    return sorted(list_of_frames, key=lambda x: int(x.split(f'data/frames/{data_set}/{video_id}/')[1].split('.jpg')[0]))
 
 def create_video_from_frames(frames, title, fps=30, fourcc=cv2.VideoWriter_fourcc('m', 'p', '4', 'v')):
     img_array = []
@@ -70,3 +70,49 @@ def create_video_from_frames(frames, title, fps=30, fourcc=cv2.VideoWriter_fourc
     for i in range(len(img_array)):
         out.write(img_array[i])
     out.release()
+
+# Figure out which video is missing a missing frame score
+def create_train_or_test_data_set_for_rgb(data_set='train'):
+  X = 'first'
+  y = 'first'
+  for directory in glob.glob(f'data/frames/{data_set}/*'):
+      frames = glob.glob(f'{directory}/*')
+      video_id = directory.split(f'data/frames/{data_set}/')[1]
+      sorted_frames = sort_frames(frames, video_id, data_set=data_set)
+      if X == 'first':
+          X = rgb_features(sorted_frames, 8)
+      else:
+          X = np.concatenate(
+              (X, rgb_features(sorted_frames, 8)), axis=0)
+      scores = average_scores[average_scores['filename'] ==
+                              video_id]['average_score'].values[0].reshape(-1, 1)
+      if y == 'first':
+          y = scores
+      else:
+          y = np.concatenate((y, scores), axis=0)
+      print(f'complete for {video_id}')
+      print(np.array(X).shape, np.array(y).shape)
+  X = MinMaxScaler(feature_range=(0, 1)).fit_transform(X)
+  return X, y
+
+  def create_single_video_data_set_for_rgb(data_set='train', directory):
+    X = 'first'
+    y = 'first'
+    frames = glob.glob(f'{directory}/*')
+    video_id = directory.split(f'data/frames/{data_set}/')[1]
+    sorted_frames = sort_frames(frames, video_id, data_set=data_set)
+    if X == 'first':
+        X = rgb_features(sorted_frames, 8)
+    else:
+        X = np.concatenate(
+            (X, rgb_features(sorted_frames, 8)), axis=0)
+    scores = average_scores[average_scores['filename'] ==
+                            video_id]['average_score'].values[0].reshape(-1, 1)
+    if y == 'first':
+        y = scores
+    else:
+        y = np.concatenate((y, scores), axis=0)
+    print(f'complete for {video_id}')
+    print(np.array(X).shape, np.array(y).shape)
+    X = MinMaxScaler(feature_range=(0, 1)).fit_transform(X)
+    return X, y

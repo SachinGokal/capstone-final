@@ -17,14 +17,14 @@ def get_image_features(frames_filepath):
   image_features.append(np.array(vgg16_feature).flatten())
   return image_features
 
-def rgb_to_features(image_list, bins):
+def rgb_features(image_list, bins):
     features = []
     for frame in image_list:
       cv_img = cv2.imread(frame)
       histr = cv2.calcHist([cv_img], [0, 1, 2], None, [
                            bins, bins, bins], [0, 256, 0, 256, 0, 256])
       cv2.normalize(hist, hist)
-      features.append(histr)
+      features.append(histr.flatten())
     return features
 
 def rgb_to_hsv_histogram_features(image_list, bins):
