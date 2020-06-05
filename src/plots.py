@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import scikitplot as skplt
 plt.style.use('ggplot')
 
 def plot_average_importance_scores(avg_scores, title):
