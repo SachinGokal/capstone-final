@@ -49,5 +49,36 @@ class LSTM_Score_Predictor():
     X = np.reshape(X_test, (X_test.shape[0], 1, X_test.shape[1]))
     return self.model.predict(X)
 
-def rmse(mse):
-  return np.sqrt(mse)
+
+## ONE LAYER LSTM
+
+class LSTM_Score_Predictor():
+
+  def __init__(self):
+    pass
+
+  def build_model(self, first_layer_size=30):
+    model = Sequential()
+
+    model.add(LSTM(first_layer_size, return_sequences=False))
+    model.add(Activation("tanh"))
+    model.add(Dropout(0.2))
+
+    model.add(Dense(1, activation='linear'))
+
+    model.compile(optimizer='adam',
+                  loss='mse')
+
+    self.model = model
+
+  def fit(self, X_train, y_train, batch_size=200, epochs=30):
+    self.build_model()
+
+    # input must be [samples, time steps, features]
+    X = np.reshape(X_train, (X_train.shape[0], 1, X_train.shape[1]))
+
+    return self.model.fit(X, y_train, batch_size=batch_size, epochs=epochs, verbose=1, shuffle=False)
+
+  def predict(self, X_test):
+    X = np.reshape(X_test, (X_test.shape[0], 1, X_test.shape[1]))
+    return self.model.predict(X)

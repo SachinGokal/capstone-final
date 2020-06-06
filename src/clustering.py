@@ -19,12 +19,11 @@ def kmeans(image_features, n_clusters):
     kmeans = KMeans(n_clusters=k).fit_predict(image_features)
     silhouette[k] = silhouette_score(image_features, kmeans)
     print(f'{k} cluster complete')
-  return silhouette
 
-def closest_to_centroid_frames(kmeans, image_list):
+def closest_to_centroid_frames(kmeans, image_list, image_features):
   closest, _ = pairwise_distances_argmin_min(
       kmeans.cluster_centers_, image_features)
-  np.array(image_list)[closest]
+  return np.array(image_list)[closest]
 
 def random_frame_idxs_for_cluster(kmeans_labels)
   idxs = []

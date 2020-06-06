@@ -4,7 +4,6 @@ import glob
 import numpy as np
 import pandas as pd
 
-
 def create_video_summary(model, frames, video_as_features, time_length):
   scores = model.predict(video_as_features)
   scores_median = np.median(scores)
