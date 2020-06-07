@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import scikitplot as skplt
 from scipy.signal import find_peaks
 plt.style.use('ggplot')
-from scipy.signal import find_peaks
 
 def plot_average_importance_scores(avg_scores, title):
   fig, ax = plt.subplots(figsize=(10, 5))
@@ -16,7 +14,7 @@ def plot_average_importance_scores(avg_scores, title):
 
 def plot_peak_frames(quantile=0.75, scores, images):
   peaks, _ = find_peaks(
-      scores, height=np.quantile(avg_scores_test, .quantile))
+      scores, height=np.quantile(scores, quantile))
   peak_frames = np.array(images)[peaks]
   fig, axs = plt.subplots(10, 1, figsize=(30, 30))
   for frame, ax in zip(peak_frames, axs.flatten()):
