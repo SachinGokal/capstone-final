@@ -10,7 +10,7 @@ from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, r2_score
 
-# Current LSTM Architecture
+# General Model LSTM
 class LSTM_Score_Predictor():
 
   def __init__(self):
@@ -37,7 +37,7 @@ class LSTM_Score_Predictor():
 
     self.model = model
 
-  def fit(self, X_train, y_train, batch_size=500, epochs=30):
+  def fit(self, X_train, y_train, batch_size=500, epochs=15):
     self.build_model()
 
     # input must be [samples, time steps, features]
@@ -50,7 +50,7 @@ class LSTM_Score_Predictor():
     return self.model.predict(X)
 
 
-## ONE LAYER LSTM
+# Category Model LSTM
 
 class LSTM_Score_Predictor():
 
@@ -71,7 +71,7 @@ class LSTM_Score_Predictor():
 
     self.model = model
 
-  def fit(self, X_train, y_train, batch_size=200, epochs=30):
+  def fit(self, X_train, y_train, batch_size=200, epochs=15):
     self.build_model()
 
     # input must be [samples, time steps, features]
