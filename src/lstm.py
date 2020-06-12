@@ -49,9 +49,7 @@ class LSTM_Score_Predictor():
     X = np.reshape(X_test, (X_test.shape[0], 1, X_test.shape[1]))
     return self.model.predict(X)
 
-
 # Category Model LSTM
-
 class LSTM_Score_Predictor():
 
   def __init__(self):

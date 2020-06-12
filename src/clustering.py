@@ -1,14 +1,14 @@
 from sklearn.metrics import silhouette_score, pairwise_distances_argmin_min
 from sklearn.cluster import KMeans, spectral_clustering
 
-## Approach #1 with high number of clusters for dynamic with VGG features
+## Approach #1 with high number of clusters for with VGG features
 
 # Predict image features using VGG
 # Use kmean clustering with n_clusters that represent 10% of the set of the frames
 # Choose a frame closest to the centroid for each cluster for constructing summary
 # Sort frames to generate the summary
 
-## Approach #2 with low number of clusters for static with RGB features (or VGG)
+## Approach #2 with low number of clusters with RGB features (or VGG)
 
 # Same as above but calculate RGB histogram values for each frame and randomly
 # select frame from cluster

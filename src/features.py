@@ -22,28 +22,7 @@ def get_vgg_features(image_list):
 
   return image_features
 
-def create_train_or_test_data_set_for_vgg(data_set='train'):
-  X = 'first'
-  y = 'first'
-  for directory in glob.glob(f'data/frames/{data_set}/*'):
-      frames = glob.glob(f'{directory}/*')
-      video_id = directory.split(f'data/frames/{data_set}/')[1]
-      sorted_frames = sort_frames(frames, video_id, data_set=data_set)
-      if X == 'first':
-          X = get_vgg_features(sorted_frames)
-      else:
-          X = np.concatenate((X, get_vgg_features(sorted_frames))
-      scores = average_scores[average_scores['filename'] ==
-                              video_id]['average_score'].values[0].reshape(-1, 1)
-      if y == 'first':
-          y = scores
-      else:
-          y = np.concatenate((y, scores), axis=0)
-      print(f'complete for {video_id}')
-      print(np.array(X).shape, np.array(y).shape)
-  X = MinMaxScaler(feature_range=(0, 1)).fit_transform(X)
-  return X, y
-
+# rgb features
 def rgb_features(image_list, bins):
     features = []
     for frame in image_list:
@@ -54,6 +33,7 @@ def rgb_features(image_list, bins):
       features.append(histr.flatten())
     return features
 
+# hsv features
 def hsv_features(image_list, bins):
     features = []
     for frame in image_list:
@@ -64,73 +44,3 @@ def hsv_features(image_list, bins):
       cv2.normalize(hist, hist)
       features.append(histr.flatten())
     return features
-
-# Figure out which video is missing a missing frame score
-def create_train_or_test_data_set_for_rgb(data_set='train'):
-  X = 'first'
-  y = 'first'
-  for directory in glob.glob(f'data/frames/{data_set}/*'):
-      frames = glob.glob(f'{directory}/*')
-      video_id = directory.split(f'data/frames/{data_set}/')[1]
-      sorted_frames = sort_frames(frames, video_id, data_set=data_set)
-      if X == 'first':
-          X = rgb_features(sorted_frames, 8)
-      else:
-          X = np.concatenate(
-              (X, rgb_features(sorted_frames, 8)), axis=0)
-      scores = average_scores[average_scores['filename'] ==
-                              video_id]['average_score'].values[0].reshape(-1, 1)
-      if y == 'first':
-          y = scores
-      else:
-          y = np.concatenate((y, scores), axis=0)
-      print(f'complete for {video_id}')
-      print(np.array(X).shape, np.array(y).shape)
-  X = MinMaxScaler(feature_range=(0, 1)).fit_transform(X)
-  return X, y
-  # Figure out which video is missing a missing frame score
-
-def create_train_or_test_data_set_for_hsv(data_set='train'):
-  X = 'first'
-  y = 'first'
-  for directory in glob.glob(f'data/frames/{data_set}/*'):
-      frames = glob.glob(f'{directory}/*')
-      video_id = directory.split(f'data/frames/{data_set}/')[1]
-      sorted_frames = sort_frames(frames, video_id, data_set=data_set)
-      if X == 'first':
-          X = hsv_features(sorted_frames, 8)
-      else:
-          X = np.concatenate(
-              (X, rgb_features(sorted_frames, 8)), axis=0)
-      scores = average_scores[average_scores['filename'] ==
-                              video_id]['average_score'].values[0].reshape(-1, 1)
-      if y == 'first':
-          y = scores
-      else:
-          y = np.concatenate((y, scores), axis=0)
-      print(f'complete for {video_id}')
-      print(np.array(X).shape, np.array(y).shape)
-  X = MinMaxScaler(feature_range=(0, 1)).fit_transform(X)
-  return X, y
-
-def create_single_video_data_set_for_rgb(data_set='train', directory):
-    X = 'first'
-    y = 'first'
-    frames = glob.glob(f'{directory}/*')
-    video_id = directory.split(f'data/frames/{data_set}/')[1]
-    sorted_frames = sort_frames(frames, video_id, data_set=data_set)
-    if X == 'first':
-        X = rgb_features(sorted_frames, 8)
-    else:
-        X = np.concatenate(
-            (X, rgb_features(sorted_frames, 8)), axis=0)
-    scores = average_scores[average_scores['filename'] ==
-                            video_id]['average_score'].values[0].reshape(-1, 1)
-    if y == 'first':
-        y = scores
-    else:
-        y = np.concatenate((y, scores), axis=0)
-    print(f'complete for {video_id}')
-    print(np.array(X).shape, np.array(y).shape)
-    X = MinMaxScaler(feature_range=(0, 1)).fit_transform(X)
-    return X, y
