@@ -65,21 +65,19 @@ def create_train_or_test_data_set_for_vgg(data_set='train'):
       frames = glob.glob(f'{directory}/*')
       video_id = directory.split(f'data/frames/{data_set}/')[1]
       sorted_frames = sort_frames(frames, video_id, data_set=data_set)
-      if X == 'first':
-          X = get_vgg_features(sorted_frames)
-      else:
-          X = np.concatenate((X, get_vgg_features(sorted_frames))
-                             scores=average_scores[average_scores['filename'] ==
-                                                   video_id]['average_score'].values[0].reshape(-1, 1)
-                             if y == 'first':
-                             y=scores
-                             else:
-                             y=np.concatenate((y, scores), axis=0)
-                             print(f'complete for {video_id}')
-                             print(np.array(X).shape, np.array(y).shape)
-                             X=MinMaxScaler(feature_range=(0, 1)
-                                            ).fit_transform(X)
-                             return X, y
+    if X == 'first':
+        X = get_vgg_features(sorted_frames)
+    else:
+        X = np.concatenate((X, get_vgg_features(sorted_frames))
+    scores = average_scores[average_scores['filename'] == video_id]['average_score'].values[0].reshape(-1, 1)
+    if y == 'first':
+        y = scores
+    else:
+        y = np.concatenate((y, scores), axis=0)
+    print(f'complete for {video_id}')
+    print(np.array(X).shape, np.array(y).shape)
+    X = MinMaxScaler(feature_range=(0, 1)).fit_transform(X)
+    return X, y
 
 def create_train_or_test_data_set_for_rgb(data_set='train'):
   X = 'first'
@@ -103,7 +101,6 @@ def create_train_or_test_data_set_for_rgb(data_set='train'):
       print(np.array(X).shape, np.array(y).shape)
   X = MinMaxScaler(feature_range=(0, 1)).fit_transform(X)
   return X, y
-  # Figure out which video is missing a missing frame score
 
 def create_single_video_data_set_for_rgb(data_set='train', directory):
     X = 'first'
