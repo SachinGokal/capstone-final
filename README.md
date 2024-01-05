@@ -1,4 +1,4 @@
-# Exploration of Video Summarization Techniques
+# Testing Video Summarization Methods for Youtube Samples
 
 Video summarization is the compression of a full video into a series of key shots or sequences. The goal is to reduce a video into a shorter form, but using an algorithmic approach for efficiency when dealing with a batch of videos or long-form video. Examples of video summarization applications include generating sports highlights such as soccer goals or basketball shots.
 
